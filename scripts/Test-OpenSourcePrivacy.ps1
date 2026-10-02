@@ -42,7 +42,10 @@ function Test-IsText([string]$RelativePath) {
 
 function Test-EmailPrivacy([string]$Text, [string]$Label) {
     foreach ($match in [regex]::Matches($Text, '(?i)(?<![\w.+-])[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}')) {
-        if ($match.Value -notmatch '(?i)@(?:users\.noreply\.github\.com|example\.invalid|example\.com)$') {
+        # GitHub web commits use this system identity; other github.com addresses still require review.
+        $isGitHubWebCommitter = $match.Value -ieq 'noreply@github.com'
+        if (-not $isGitHubWebCommitter -and
+            $match.Value -notmatch '(?i)@(?:users\.noreply\.github\.com|example\.invalid|example\.com)$') {
             [void]$privacyFindings.Add("${Label}: PersonalEmail")
         }
     }

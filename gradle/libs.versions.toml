@@ -1,0 +1,18 @@
+[versions]
+androidGradlePlugin = "9.0.1"
+androidxCore = "1.18.0"
+androidxActivity = "1.13.0"
+androidxLifecycle = "2.8.7"
+junit = "4.13.2"
+json = "20240303"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+junit = { module = "junit:junit", version.ref = "junit" }
+json = { module = "org.json:json", version.ref = "json" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+

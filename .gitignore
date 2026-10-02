@@ -1,0 +1,40 @@
+*.iml
+.gradle
+/local.properties
+local.properties
+/.idea
+.DS_Store
+build/
+apk_output/
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+
+# Kotlin/IDE state, local credentials, logs, and private key material
+.kotlin/
+.vscode/
+.env
+.env.*
+!*.example
+*.log
+*.hprof
+*.pfx
+*.pem
+*.key
+keystore.properties
+signing.properties
+
+# Local Android release signing material and its user-bound DPAPI password
+/signing/
+*.jks
+*.keystore
+*.p12
+*.dpapi
+
+# Python virtual environment
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class

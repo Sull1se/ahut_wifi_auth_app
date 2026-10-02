@@ -28,6 +28,8 @@
 
 “注销网络”保留已保存凭据。“删除已保存凭据”会清除凭据密文及对应本地密钥。权限不足、定位关闭或 SSID 无法识别时，应用停止网关操作并显示提示。
 
+开发细节见 [架构说明](docs/architecture.md) 和 [实现说明](docs/ahut_wifi_auth_app.md)。
+
 ## 许可证
 
 项目原创代码与文档采用 [MIT License](LICENSE)，版权署名为 AHUT Wi-Fi Auth Contributors。第三方组件保留各自许可证，见 [第三方声明](THIRD_PARTY_NOTICES.md)。

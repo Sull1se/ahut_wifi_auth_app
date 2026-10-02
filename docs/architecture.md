@@ -1,6 +1,6 @@
 # Android 客户端架构
 
-应用包名为 `ahut.wifiauth.android`。本说明记录网络身份、ePortal 请求、认证协调与凭据存储的当前边界。需求和版本历史见 [ahut_wifi_auth_app.md](ahut_wifi_auth_app.md)。
+应用包名为 `ahut.wifiauth.android`。本说明记录网络身份、ePortal 请求、认证协调与凭据存储的当前边界。协议、界面、构建方式和版本历史见 [实现说明](ahut_wifi_auth_app.md)。
 
 ## 模块
 
@@ -20,7 +20,7 @@ app/src/main/java/ahut/wifiauth/android/
 └── storage/CredentialStore.kt              # AndroidKeyStore 支持的 AES-GCM 凭据存取
 ```
 
-Android backup 配置还包含 `app/src/main/res/xml/backup_rules.xml` 和 `app/src/main/res/xml/data_extraction_rules.xml`，用于排除敏感应用偏好。Release 签名初始化与构建脚本位于 `scripts/Initialize-ReleaseSigning.ps1`、`scripts/Build-Release.ps1`；签名、环境隔离和发行验收摘要见 [release_signing.md](release_signing.md)。
+Android backup 配置还包含 `app/src/main/res/xml/backup_rules.xml` 和 `app/src/main/res/xml/data_extraction_rules.xml`，用于排除敏感应用偏好。Release 签名初始化与构建脚本位于 `scripts/Initialize-ReleaseSigning.ps1`、`scripts/Build-Release.ps1`；构建环境与签名接口见 [实现说明](ahut_wifi_auth_app.md#构建与release签名)。
 
 `MainActivity` 和 `AuthTileService` 都只把操作交给进程级 `AuthenticationCoordinator`。协调器共享实时 Wi-Fi 快照、网关状态、认证/注销互斥锁和查询结果；回调观察者按组件身份成对管理。Activity 从创建到销毁期间保持观察，磁贴仅在系统要求监听时观察。最后一个观察者离开时，协调器停止监听并取消查询、登录及重试任务，但保留持久化的连接周期、用户暂停和重试预算。组件恢复观察后重新读取当前快照。Android 后台位置权限、系统省电策略和进程回收仍可能限制后台 SSID 读取；进程被终止后没有常驻服务保证继续工作。
 
@@ -50,3 +50,5 @@ Android backup 配置还包含 `app/src/main/res/xml/backup_rules.xml` 和 `app/
 ## 凭据保护边界
 
 凭据密文保存在应用私有偏好，使用 AndroidKeyStore 中 AES-256-GCM 密钥保护。设备可能提供硬件保护，但硬件支持取决于设备实现，应用不承诺密钥必然位于 TEE。GCM 认证标签可检测密文篡改；随机 IV 是加密格式的一部分，不应描述为独立的重放保护机制。密钥不可用或解密失败时，凭据必须视作无法读取并要求恢复，不得静默改用空值。
+
+现有网关通过 HTTP GET 接收账号密码，不提供传输加密；本地凭据加密不能保护网络传输过程。请求固定到当前 Wi-Fi 且不跟随重定向，但完整认证 URL 仍包含凭据，不应放入日志或公开 Issue。
